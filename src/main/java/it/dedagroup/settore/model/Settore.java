@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 public class Settore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String nome;
-    int posti;
+    private Long id;
+    private String nome;
+    private int posti;
+    private boolean isCancellato;
 }

@@ -20,17 +20,27 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
     }
 
     @Override
-    public List<Settore> findAllByNome(String nome) {
-        return settoreRepository.findAllByNome(nome);
+    public Settore findByIdAndIsCancellatoFalse(long id) {
+        return null;
+    }
+
+    @Override
+    public List<Settore> findAllByNomeAndIsCancellatoFalse(String nome) {
+        return settoreRepository.findAllByNomeAndIsCancellatoFalse(nome);
     }
 
     @Override
     public List<Settore> findAllByPosti(int posti) {
-        return settoreRepository.findAllByPosti(posti);
+        return null;
     }
 
     @Override
-    public Settore saveSettore(Settore settore) {
+    public Settore saveSettore(Settore settore){
+        return settoreRepository.save(settore);
+    }
+
+    @Override
+    public Settore updateSettore(Settore settore) {
         return null;
     }
 }

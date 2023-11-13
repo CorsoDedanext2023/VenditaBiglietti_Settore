@@ -9,17 +9,17 @@ import java.util.List;
 
 @Component
 public class SettoreMapper {
-    public Settore RequestToSettore(SettoreRequest request){
+    public Settore toSettoreFromRequest(SettoreRequest request){
         Settore newSettore = new Settore();
         newSettore.setNome(request.getNome());
         newSettore.setPosti(request.getPosti());
+        newSettore.setCancellato(false);
         return newSettore;
     }
-    public Settore SettoreToResponse(Settore settore){
+    public SettoreResponse toSettoreResponseFromSettore(Settore settore){
         SettoreResponse newResponse = new SettoreResponse();
         newResponse.setNome(settore.getNome());
         newResponse.setPosti(settore.getPosti());
-        return settore;
-
+        return newResponse;
     }
 }
