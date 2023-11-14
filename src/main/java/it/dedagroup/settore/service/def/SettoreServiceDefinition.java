@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SettoreServiceDefinition {
-    List<Settore> findAllById(Long id);
+    Settore findById(Long id);
     Settore findByIdAndIsCancellatoFalse(long id);
     List<Settore> findAllByNomeAndIsCancellatoFalse(String nome);
     List<Settore> findAllByPosti(int posti);
