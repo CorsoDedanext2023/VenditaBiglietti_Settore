@@ -16,10 +16,15 @@ public class SettoreMapper {
         newSettore.setCancellato(false);
         return newSettore;
     }
+    
     public SettoreResponse toSettoreResponseFromSettore(Settore settore){
         SettoreResponse newResponse = new SettoreResponse();
         newResponse.setNome(settore.getNome());
         newResponse.setPosti(settore.getPosti());
         return newResponse;
+    }
+    
+    public List<SettoreResponse> toListSettoreResponseFromListSettore(List<Settore> listaSettore){
+    	return listaSettore.stream().map(s->toSettoreResponseFromSettore(s)).toList();
     }
 }

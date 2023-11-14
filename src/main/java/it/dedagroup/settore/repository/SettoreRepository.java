@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SettoreRepository extends JpaRepository<Settore, Long> {
-    List<Settore> findAllById(Long id);
     Optional<Settore> findByIdAndIsCancellatoFalse(long id);
     List<Settore> findAllByNomeAndIsCancellatoFalse(String nome);
     List<Settore> findAllByPosti(int posti);
