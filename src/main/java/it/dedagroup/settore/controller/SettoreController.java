@@ -44,7 +44,7 @@ public class SettoreController {
 	 * Questo Endpoint serve a effettuare l'aggiunta di un nuovo settore nel database.
 	 * @param request Richiede in input, tramite JSON, un oggetto di tipo {@link SettoreRequest} <br>
 	 *                che contiene i dati necessari alla creazione dell'oggetto {@link Settore}.
-	 * @return {@link SettoreResponse} Ritorna un oggetto DTO con all'interno tutti i dati del settore necessari.
+	 * @return {@link Settore} Ritorna un oggetto DTO con all'interno tutti i dati del settore necessari.
 	 */
 	@Operation(summary = "Aggiunge un nuovo settore",description = "Serve a effettuare l'aggiunta di un nuovo settore nel database.")
 	@ApiResponses(value={
