@@ -9,11 +9,13 @@ import java.util.List;
 
 @Component
 public class SettoreMapper {
+
     public Settore toSettoreFromRequest(SettoreRequest request){
         Settore newSettore = new Settore();
         newSettore.setNome(request.getNome());
         newSettore.setPosti(request.getPosti());
         newSettore.setCancellato(false);
+        newSettore.setVersion(newSettore.getVersion());
         return newSettore;
     }
     

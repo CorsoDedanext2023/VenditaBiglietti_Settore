@@ -10,4 +10,5 @@ public interface SettoreRepository extends JpaRepository<Settore, Long> {
     Optional<Settore> findByIdAndIsCancellatoFalse(long id);
     List<Settore> findAllByNomeAndIsCancellatoFalse(String nome);
     List<Settore> findAllByPosti(int posti);
+
 }
