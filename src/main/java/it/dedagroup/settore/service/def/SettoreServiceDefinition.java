@@ -11,6 +11,8 @@ public interface SettoreServiceDefinition {
     Settore findByIdAndIsCancellatoFalse(long id);
     List<Settore> findAllByNomeAndIsCancellatoFalse(String nome);
     List<Settore> findAllByPosti(int posti);
+    List<Settore>findAllByIdLuogo(long idLuogo);
+    List<Settore>findAll();
     Settore saveSettore(Settore settore);
     Settore updateSettore(Settore settore);
     void deleteSettore(long id);

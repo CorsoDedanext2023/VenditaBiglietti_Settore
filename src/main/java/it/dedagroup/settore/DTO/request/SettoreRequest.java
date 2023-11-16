@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 
-
 @Data
 public class SettoreRequest {
 
@@ -14,4 +13,7 @@ public class SettoreRequest {
 
         @Positive(message = "Puoi inserire solo numeri")
         private int posti;
+
+        @Positive(message = "Puoi inserire solo numeri positivi")
+        private long idLuogo;
 }
