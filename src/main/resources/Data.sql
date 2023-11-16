@@ -1,0 +1,6 @@
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (1,0,'A1',50,0)
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (1,0,'B1',100,0)
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (1,0,'C1',150,0)
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (2,0,'Anello1',50,0)
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (2,0,'Anello2',100,0)
+insert into settore (id_luogo,is_cancellato,nome,posti,version) values (2,1,'Anello3',150,0)

@@ -11,6 +11,10 @@ import it.dedagroup.settore.mapper.SettoreMapper;
 import it.dedagroup.settore.model.Settore;
 import static org.springframework.http.HttpStatus.*;
 import it.dedagroup.settore.service.impl.SettoreServiceImplementation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -139,5 +139,10 @@ public class SettoreController {
 	public ResponseEntity<List<Settore>> findByIdLuogo(@Positive(message = "Il campo ID deve essere un numero positivo")
 														   @RequestParam("idLuogo") long idLuogo){
 		return ResponseEntity.status(FOUND).body(settoreService.findAllByIdLuogo(idLuogo));
+	}
+
+	@GetMapping("/findAll")
+	public ResponseEntity<List<Settore>> findAll(){
+		return ResponseEntity.status(FOUND).body(settoreService.findAll());
 	}
 }

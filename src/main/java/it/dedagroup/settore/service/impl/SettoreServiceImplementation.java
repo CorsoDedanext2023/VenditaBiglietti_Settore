@@ -19,6 +19,10 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 
 	@Override
 	public List<Settore> findAllByIds(List<Long> ids) {
+		List<Settore> lista = settoreRepository.findAllById(ids);
+		if(lista.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nessun settore trovato con ID: " +ids.toString());
+		}
 		return settoreRepository.findAllById(ids);
 	}
 	public Settore findById(Long id) {
@@ -38,7 +42,11 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 
 	@Override
 	public List<Settore> findAllByNomeAndIsCancellatoFalse(String nome) {
-		return settoreRepository.findAllByNomeAndIsCancellatoFalse(nome);
+		List<Settore> lista = settoreRepository.findAllByNomeAndIsCancellatoFalse(nome);
+		if(lista.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nessun settore trovato con nome: " +nome);
+		}
+		return lista;
 	}
 
 	@Override
@@ -49,6 +57,11 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 	@Override
 	public List<Settore> findAllByIdLuogo(long idLuogo) {
 		return settoreRepository.findAllByIdLuogo(idLuogo);
+	}
+
+	@Override
+	public List<Settore> findAll() {
+		return settoreRepository.findAll();
 	}
 
 
@@ -87,6 +100,7 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 		settoreRepository.save(settoreDaCancellare);
 
 	}
+
 
 
 }

@@ -1,9 +1,9 @@
 package it.dedagroup.settore.DTO.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 
 @Data
 public class SettoreRequest {
@@ -14,6 +14,6 @@ public class SettoreRequest {
         @Positive(message = "Puoi inserire solo numeri")
         private int posti;
 
-        @Positive(message = "Puoi inserire solo numeri")
+        @Positive(message = "Puoi inserire solo numeri positivi")
         private long idLuogo;
 }
