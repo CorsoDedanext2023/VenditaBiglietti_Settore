@@ -13,11 +13,9 @@ public class Settore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String nome;
-    @Column(nullable = false)
     private int posti;
-    @Column(nullable = false)
+    private long idLuogo;
     private boolean isCancellato;
 
     @Version
