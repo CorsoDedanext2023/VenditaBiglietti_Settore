@@ -47,22 +47,35 @@ public class SettoreController {
 	 * @return {@link Settore} Ritorna un oggetto DTO con all'interno tutti i dati del settore necessari.
 	 */
 	@Operation(summary = "Aggiunge un nuovo settore",description = "Serve a effettuare l'aggiunta di un nuovo settore nel database.")
-	@ApiResponses(value={
-			@ApiResponse(description = "Il settore è stato aggiunto",
+	@ApiResponse(	description = "Il settore è stato aggiunto",
 					responseCode = "CREATED(201)",
 					content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class)))
-	})
+	
     @PostMapping("/aggiungiSettore")
     public ResponseEntity<Settore> aggiungiSettore(@Valid @RequestBody SettoreRequest request){
         Settore newSettore = settoreService.saveSettore(settoreMapper.toSettoreFromRequest(request));
         return ResponseEntity.status(CREATED).body(newSettore);
     }
 
+	
     /**
      * Questo Endpoint serve a cercare nel database un oggetto di tipo {@link Settore} tramite il suo ID, anche tra i settori cancellati.<br>
      * @param id Richiede in input, tramite RequestParam, un numero intero corrispondente all' ID del settore da cercare.
      * @return {@link Settore} Ritorna un oggetto con all'interno tutti i dati del settore.
      */
+	@Operation(summary = "Cerca un settore per id",description = "Serve a effettuare la ricerca di un settore nel database,tramite l'id passato al metodo. Se viene trovato risponderà 302, se non viene trovato viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece l'id è minore di 1 è un id non valido e quindi risponderà con un codice 400")
+	@ApiResponses(value={
+			@ApiResponse(description = "Il settore è stato trovato",
+						responseCode = "FOUND(302)",
+						content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+			@ApiResponse(description = "Il settore non è stato stato trovato per l'id passato al metodo",
+						responseCode = "NOTFOUND(404)",
+						content = @Content(mediaType = MediaType.ALL_VALUE)),
+			@ApiResponse(description = "l'ID deve essere un numero positivo",
+			responseCode = "BADREQUEST(400)",
+			content = @Content(mediaType = MediaType.ALL_VALUE))
+			
+	})
     @GetMapping("/findById")
     public ResponseEntity<Settore> findById(@Positive(message = "Il campo ID deve essere un numero positivo")
 												@RequestParam("id") long id ){
@@ -70,11 +83,18 @@ public class SettoreController {
         return ResponseEntity.status(FOUND).body(s);
     }
 
+
     /**
      * Questo Endpoint serve a cercare nel database un oggetto di tipo {@link Settore} non cacellato tramite il suo ID.<br>
      * @param id  Richiede in input, tramite RequestParam, un numero intero corrispondente all' ID del settore da cercare.
      * @return {@link Settore} Ritorna un oggetto con all'interno tutti i dati del settore.
      */
+	@Operation(summary = "Trova un settore non cancellato per ID", description = "Serve a effettuare la ricerca di un settore non cancellato nel database,tramite l'id passato al metodo. Se viene trovato risponderà 302, se non viene trovato viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece l'id è minore di 1 è un id non valido e quindi risponderà con un codice 400")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "FOUND(302)", description = "Il settore non cancellato è stato trovato", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+            @ApiResponse(responseCode = "NOTFOUND(404)", description = "Settore non trovato per l'ID fornito", content = @Content(mediaType = MediaType.ALL_VALUE)),
+            @ApiResponse(responseCode = "BADREQUEST(400)", description = "l'ID deve essere un numero positivo",content = @Content(mediaType = MediaType.ALL_VALUE))
+    })
     @GetMapping("/findByIdEsistenti")
     public ResponseEntity<Settore> findByIdAndIsCancellatoFalse(@Positive(message = "Il campo ID deve essere un numero positivo")
 																	@RequestParam("id") long id ){
@@ -82,22 +102,42 @@ public class SettoreController {
         return ResponseEntity.status(FOUND).body(s);
     }
 
+	
 	/**
 	 * Questo Enpoint serve per la ricerca di tutti i settori in base a una lista di ID.
 	 * @param ids Richiede in input, tramite JSON, una list di numeri interi corrispondenti agli ID dei settori da cercare.
 	 * @return
 	 */
-	@GetMapping("/allByIds")
+	 @Operation(summary = "Ricerca dei settori tramite lista di ID",description = "Serve a effettuare la ricerca di una lista di settori nel database,tramite la lista di id passata al metodo, in formato json. Se la lista viene trovata risponderà con codice 200, se almeno uno degli id non viene trovato viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece la lista passata al metodo è vuota risponderà con un codice 400")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "SUCCESS(200)", description = "la lista dei settori è stata trovata", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+	            @ApiResponse(responseCode = "NOTFOUND(400)", description = "la lista dei settori non è stata trovata per gli ID forniti")
+	    })
+    @GetMapping("/allByIds")
 	public ResponseEntity<List<Settore>> findAllByIds(@NotEmpty(message = "La lista deve contenere almeno un ID")
 														  @RequestBody List<Long> ids){
 		return ResponseEntity.ok(settoreService.findAllByIds(ids));
 	}
 
+	 
 	/**
 	 * Questo Endpoint serve a cercare tutti i settori che hanno un numero di posti unguale a quello inserito in input.
 	 * @param posti Richiede in input, tramite PathVariable, un numero intero corrispondente ai posti.
 	 * @return Ritorna una lista di settori col numero di posti inserito in input.
 	 */
+	 @Operation(summary = "Restituisce una lista di settori in base al numero dei posti(capienza)",description = "Serve a effettuare la ricerca di una lista di settori nel database,tramite il numero dei posti passato al metodo. Se viene trovata risponderà 200, se non viene trovata viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece il numero dei posti è minore di 1 risponderà con un codice 400")
+		@ApiResponses(value={
+				@ApiResponse(description = "la lista di settori è stata trovata",
+							responseCode = "SUCCESS(200)",
+							content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+				@ApiResponse(description = "La lista di settori non è stata stata trovata per il numero di posti passato al metodo",
+							responseCode = "NOTFOUND(404)",
+							content = @Content(mediaType = MediaType.ALL_VALUE)),
+				@ApiResponse(description = "il numero dei posti deve essere un numero positivo",
+				responseCode = "BADREQUEST(400)",
+				content = @Content(mediaType = MediaType.ALL_VALUE))
+				
+		})
 	@GetMapping("/allByPosti/{posti}")
 	public ResponseEntity<List<Settore>> findAllByPosti(@Positive(message = "Il campo posti deve essere un numero positivo")
 															@PathVariable("posti") int posti){
@@ -105,11 +145,24 @@ public class SettoreController {
 		return ResponseEntity.ok(settori);
 	}
 
+	 
 	/**
      * Questo Endpoint serve a cercare nel database tutti i settori con lo stesso nome.
      * @param nome Richiede in input, tramite RequestParam una stringa corrispondente al nome da cercare.
      * @return Ritorna una lista di settori.
      */
+	 @Operation(summary = "Restituisce una lista di settori non cancellati in base ad un nome",description = "Serve a effettuare la ricerca di una lista di settori nel database,tramite un nome passato come parametro al metodo. Se viene trovata risponderà 302, se non viene trovata viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece il nome è una stringa vuota risponderà con un codice 400")
+		@ApiResponses(value={
+				@ApiResponse(description = "la lista di settori è stata trovata",
+							responseCode = "FOUND(302)",
+							content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+				@ApiResponse(description = "La lista di settori non è stata stata trovata per il nome passato al metodo",
+							responseCode = "NOTFOUND(404)",
+							content = @Content(mediaType = MediaType.ALL_VALUE)),
+				@ApiResponse(description = "il nome non può essere una stringa vuota",
+				responseCode = "BADREQUEST(400)",
+				content = @Content(mediaType = MediaType.ALL_VALUE))
+		})
 	@GetMapping("/allByNome/{nome}")
 	public ResponseEntity<List<Settore>> findAllByNomeAndIsCancellatoFalse(@NotBlank(message = "Il campo nome non può essere lasciato vuoto")
 																			   @PathVariable("nome") String nome){
@@ -117,30 +170,67 @@ public class SettoreController {
 		return ResponseEntity.ok(settori);
 	}
 
+	 
 	/**
-	 * Questo Endpoint serve simula la cancellazione del settore dal database, tramite ID del settore,<br>
+	 * Questo Endpoint simula la cancellazione del settore dal database, tramite ID del settore,<br>
 	 * impostando la variabile "isCancellato" a true.
 	 * @param id Richiede in input, tramite PathVariable, un numero intero corrispondente all' ID del settore da cercare.
 	 * @return Ritorna una stringa in caso di "cancellazione" effettuata.
 	 */
-	@PostMapping("/deleteSettore/{id}")
+	 @Operation(summary = "Elimina un settore per id(setta la variabile isCancellato a true)",description = "Serve a simulare l'eliminazione di un settore nel database,tramite l'id passato al metodo. Se viene eliminato risponderà 200, se non viene trovato viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece l'id è minore di 1 è un id non valido e quindi risponderà con un codice 400")
+		@ApiResponses(value={
+				@ApiResponse(description = "Il settore è stato eliminato",
+							responseCode = "SUCCESS(200)",
+							content = @Content(mediaType = MediaType.ALL_VALUE)),
+				@ApiResponse(description = "Il settore non è stato stato eliminato a causa dell'id passato al metodo",
+							responseCode = "NOTFOUND(404)",
+							content = @Content(mediaType = MediaType.ALL_VALUE)),
+				@ApiResponse(description = "l'ID deve essere un numero positivo",
+				responseCode = "BADREQUEST(400)",
+				content = @Content(mediaType = MediaType.ALL_VALUE))
+				
+		})
+	@PutMapping("/deleteSettore/{id}")
 	public ResponseEntity<String> deleteSettore(@Positive(message = "Il campo ID deve essere un numero positivo")
 													@PathVariable("id") long id){
 		settoreService.deleteSettore(id);
 		return ResponseEntity.ok("Settore eliminato");
 	}
 
+	
 	/**
 	 * Questo Endpoint serve per la ricerca dei settori in base all'ID del luogo.
 	 * @param idLuogo Prende in input, tramite RequestParam, l'ID di un luogo.
 	 * @return Ritorna una lista di settori appartenenti a quel luogo.
 	 */
+	 @Operation(summary = "Trova una lista di settori per id di un luogo",description = "Serve a cercare una lista di settori nel database,tramite l'id del luogo passato al metodo. Se viene trovata risponderà 200, se non viene trovata viene lanciata un'eccezione e l'endpoint risponderà con status code 404, se invece l'id è minore di 1 è un id non valido e quindi risponderà con un codice 400")
+		@ApiResponses(value={
+				@ApiResponse(description = "la lista di settori è stata trovata",
+							responseCode = "FOUND(400)",
+							content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Settore.class))),
+				@ApiResponse(description = "Non esiste nessun settore con questo idLuogo",
+							responseCode = "NOTFOUND(404)",
+							content = @Content(mediaType = MediaType.ALL_VALUE)),
+				@ApiResponse(description = "l'idLuogo deve essere un numero positivo",
+				responseCode = "BADREQUEST(400)",
+				content = @Content(mediaType = MediaType.ALL_VALUE))
+				
+		})
 	@GetMapping("/findByIdLuogo")
 	public ResponseEntity<List<Settore>> findByIdLuogo(@Positive(message = "Il campo ID deve essere un numero positivo")
 														   @RequestParam("idLuogo") long idLuogo){
 		return ResponseEntity.status(FOUND).body(settoreService.findAllByIdLuogo(idLuogo));
 	}
 
+	 
+	 	/**
+		 * Questo Endpoint restituisce la lista completa dei settori presenti nel db.
+		 * @return Ritorna una lista di settori appartenenti a quel luogo.
+		 */
+	 @Operation(summary = "Trova la lista completa dei settori nel db",description = "Serve a restituire la lista completa dei settori presenti nel db. Anche se non ci sono settori nel db il metodo restitueerà una lista vuota e risponderà con status code 302")
+	 	@ApiResponse(description = "la lista di settori è stata trovata",
+	 				responseCode = "FOUND(302)",
+	 				content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = Settore.class)))
 	@GetMapping("/findAll")
 	public ResponseEntity<List<Settore>> findAll(){
 		return ResponseEntity.status(FOUND).body(settoreService.findAll());

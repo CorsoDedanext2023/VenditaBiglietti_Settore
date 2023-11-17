@@ -25,6 +25,7 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 		}
 		return settoreRepository.findAllById(ids);
 	}
+	
 	public Settore findById(Long id) {
 		return settoreRepository.findById(id)
 				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun settore trovato con ID: "+id));
