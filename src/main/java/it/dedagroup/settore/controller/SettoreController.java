@@ -52,9 +52,8 @@ public class SettoreController {
         Settore s = settoreService.findByIdAndIsCancellatoFalse(id);
         return ResponseEntity.status(HttpStatus.FOUND).body(settoreMapper.toSettoreResponseFromSettore(s));
     }
-	
-	
 
+   
 	@GetMapping("/allByIds")
 	public ResponseEntity<List<SettoreResponse>> findAllByIds(@RequestBody List<Long> ids){
 		return ResponseEntity.ok(settoreMapper.toListSettoreResponseFromListSettore(settoreService.findAllByIds(ids)));
@@ -72,7 +71,7 @@ public class SettoreController {
      * @param nome Richiede in input, tramite RequestParam un nome.
      * @return Ritorna una lista di settori.
      */
-	@GetMapping("/allByPosti/{nome}")
+	@GetMapping("/allByNome/{nome}")
 	public ResponseEntity<List<SettoreResponse>> findAllByNomeAndIsCancellatoFalse(@PathVariable("nome") String nome){
 		List<Settore> settori = settoreService.findAllByNomeAndIsCancellatoFalse(nome);
 		List<SettoreResponse> settoreResponses = settoreMapper.toListSettoreResponseFromListSettore(settori);
