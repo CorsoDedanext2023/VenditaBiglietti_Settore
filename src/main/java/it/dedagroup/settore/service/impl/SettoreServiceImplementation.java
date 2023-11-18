@@ -25,6 +25,7 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 		}
 		return settoreRepository.findAllById(ids);
 	}
+
 	public Settore findById(Long id) {
 		return settoreRepository.findById(id)
 				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun settore trovato con ID: "+id));
@@ -51,19 +52,26 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 
 	@Override
 	public List<Settore> findAllByPosti(int posti) {
-		return settoreRepository.findAllByPosti(posti);
+		List<Settore> lista = settoreRepository.findAllByPosti(posti);
+		if(lista.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nessun settore trovato con posti: " +posti);
+		}
+		return lista;
 	}
 
 	@Override
 	public List<Settore> findAllByIdLuogo(long idLuogo) {
-		return settoreRepository.findAllByIdLuogo(idLuogo);
+		List<Settore>lista = settoreRepository.findAllByIdLuogo(idLuogo);
+		if(lista.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nessun settore trovato con ID Luogo: " +idLuogo);
+		}
+		return lista;
 	}
 
 	@Override
 	public List<Settore> findAll() {
 		return settoreRepository.findAll();
 	}
-
 
 	@Override
     @Transactional(rollbackOn = Exception.class)
@@ -87,7 +95,7 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 	}
 
 	/**
-	 * Questo metodo serve simula la cancellazione del settore dal database, tramite ID del settore,<br>
+	 * Questo metodo simula la cancellazione del settore dal database, tramite ID del settore,<br>
 	 * impostando la variabile "isCancellato" a true.
 	 * @param id Richiede in input, tramite path variable, un ID.
 	 * @return Ritorna una stringa in caso di "cancellazione" effettuata.
@@ -95,12 +103,11 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void deleteSettore(long id) {
-		Settore settoreDaCancellare=settoreRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"non esiste nessun settore con questo id"));
+		Settore settoreDaCancellare=settoreRepository.findById(id)
+				.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"non esiste nessun settore con questo id"));
 		settoreDaCancellare.setCancellato(true);
 		settoreRepository.save(settoreDaCancellare);
 
 	}
-
-
 
 }

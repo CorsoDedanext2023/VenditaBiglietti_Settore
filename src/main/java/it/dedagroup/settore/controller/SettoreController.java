@@ -12,6 +12,7 @@ import it.dedagroup.settore.model.Settore;
 import static org.springframework.http.HttpStatus.*;
 import it.dedagroup.settore.service.impl.SettoreServiceImplementation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
@@ -135,8 +136,8 @@ public class SettoreController {
 	 * @param idLuogo Prende in input, tramite RequestParam, l'ID di un luogo.
 	 * @return Ritorna una lista di settori appartenenti a quel luogo.
 	 */
-	@GetMapping("/findByIdLuogo")
-	public ResponseEntity<List<Settore>> findByIdLuogo(@Positive(message = "Il campo ID deve essere un numero positivo")
+	@GetMapping("/findAllByIdLuogo")
+	public ResponseEntity<List<Settore>> findAllByIdLuogo(@Min(value= 1,message = "Il campo ID deve essere un numero positivo")
 														   @RequestParam("idLuogo") long idLuogo){
 		return ResponseEntity.status(FOUND).body(settoreService.findAllByIdLuogo(idLuogo));
 	}
