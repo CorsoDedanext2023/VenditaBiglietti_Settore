@@ -14,7 +14,7 @@ public class Settore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private int posti;
+    private int capienza;
     private long idLuogo;
     private boolean isCancellato;
 
