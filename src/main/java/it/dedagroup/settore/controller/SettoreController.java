@@ -180,7 +180,7 @@ public class SettoreController {
 														   @RequestParam("idLuogo") long idLuogo){
 		return ResponseEntity.status(FOUND).body(settoreService.findAllByIdLuogo(idLuogo));
 	}
-    
+
 	 @Operation(summary = "Trova la lista completa dei settori nel db",description = "Serve a restituire la lista completa dei settori presenti nel db. Anche se non ci sono settori nel db il metodo restitueerà una lista vuota e risponderà con status code 302")
 	 	@ApiResponse(description = "la lista di settori è stata trovata",
 	 				responseCode = "FOUND(302)",
