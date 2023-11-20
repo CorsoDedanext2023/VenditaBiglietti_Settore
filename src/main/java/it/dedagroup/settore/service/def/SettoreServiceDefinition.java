@@ -10,7 +10,7 @@ public interface SettoreServiceDefinition {
     Settore findById(Long id);
     Settore findByIdAndIsCancellatoFalse(long id);
     List<Settore> findAllByNomeAndIsCancellatoFalse(String nome);
-    List<Settore> findAllByPosti(int posti);
+    List<Settore> findAllByCapienza(int posti);
     List<Settore>findAllByIdLuogo(long idLuogo);
     List<Settore>findAll();
     Settore saveSettore(Settore settore);
