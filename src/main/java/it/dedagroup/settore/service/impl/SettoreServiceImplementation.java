@@ -147,6 +147,11 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 
 	}
 
+	@Override
+	public List<Settore> findAllByListIdLuogo(List<Long> idLuogo) {
+		return settoreRepository.findAllByIdLuogoIn(idLuogo);
+	}
+
 
 
 }

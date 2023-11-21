@@ -189,4 +189,10 @@ public class SettoreController {
 	public ResponseEntity<List<Settore>> findAll(){
 		return ResponseEntity.status(FOUND).body(settoreService.findAll());
 	}
+	 
+	 
+	 @PostMapping("/findAllByListIdLuogo")
+		public ResponseEntity<List<Settore>> findAllByListIdLuogo(@RequestBody List<Long> idLuogo){
+			return ResponseEntity.ok(settoreService.findAllByListIdLuogo(idLuogo));
+		}
 }
