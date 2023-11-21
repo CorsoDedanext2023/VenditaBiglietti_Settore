@@ -16,4 +16,5 @@ public interface SettoreServiceDefinition {
     Settore saveSettore(Settore settore);
     Settore updateSettore(Settore settore);
     void deleteSettore(long id);
+    List<Settore> findAllByListIdLuogo(List<Long> idLuogo);
 }
