@@ -6,11 +6,13 @@ import it.dedagroup.settore.repository.SettoreRepository;
 import it.dedagroup.settore.service.def.SettoreServiceDefinition;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -99,9 +101,18 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 		return lista;
 	}
 
+	/**
+	 * Questo metodo serve a trovare tutti i settori presenti nel database, compresi quelli con <br>
+	 * la variabile "isCancellato" settata a true
+	 * @return Ritorna una List di {@link Settore}.
+	 */
 	@Override
 	public List<Settore> findAll() {
-		return settoreRepository.findAll();
+		List<Settore> lista = settoreRepository.findAll();
+		if(lista.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nessun settore trovato");
+		}
+		return lista;
 	}
 
 	/**
@@ -113,45 +124,53 @@ public class SettoreServiceImplementation implements SettoreServiceDefinition {
 	@Override
     @Transactional(rollbackOn = Exception.class)
     public Settore saveSettore(Settore settore){
-        settoreRepository.save(settore);
-        return settore;
+		try {
+			settoreRepository.save(settore);
+			return settore;
+		}catch (OptimisticLockingFailureException e){
+			throw new OptimisticLockingFailureException("Questo oggetto è stato modificato");
+		}
     }
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public Settore updateSettore(Settore settore) {
-		if(settoreRepository.findById(settore.getId()).isPresent()){
-			Settore s = settoreRepository.findById(settore.getId()).get();
-			s.setNome(settore.getNome());
-			s.setCapienza(settore.getCapienza());
-			s.setIdLuogo(settore.getIdLuogo());
-			s.setCancellato(settore.isCancellato());
-			return settoreRepository.save(s);
+		try {
+			if (settoreRepository.findById(settore.getId()).isPresent()) {
+				Settore s = settoreRepository.findById(settore.getId()).get();
+				s.setNome(settore.getNome());
+				s.setCapienza(settore.getCapienza());
+				s.setIdLuogo(settore.getIdLuogo());
+				s.setCancellato(settore.isCancellato());
+				return settoreRepository.save(s);
+			}
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun settore trovato con ID: " + settore.getId());
+		}catch (OptimisticLockingFailureException e){
+			throw new OptimisticLockingFailureException("Questo oggetto è stato modificato");
 		}
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun settore trovato con ID: " +settore.getId());
 	}
 
 	/**
 	 * Questo metodo simula la cancellazione del settore dal database, tramite ID del settore,<br>
 	 * impostando la variabile "isCancellato" a true.
 	 * @param id Richiede in input, tramite path variable, un ID.
-	 * @return Ritorna una stringa in caso di "cancellazione" effettuata.
 	 */
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void deleteSettore(long id) {
-		Settore settoreDaCancellare=settoreRepository.findById(id)
-				.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"non esiste nessun settore con questo id"));
-		settoreDaCancellare.setCancellato(true);
-		settoreRepository.save(settoreDaCancellare);
-
+		try{
+			Settore settoreDaCancellare=settoreRepository.findById(id)
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"non esiste nessun settore con questo id"));
+			settoreDaCancellare.setCancellato(true);
+			settoreRepository.save(settoreDaCancellare);
+		}catch (OptimisticLockingFailureException e){
+			throw new OptimisticLockingFailureException("Questo oggetto è stato modificato");
+		}
 	}
 
 	@Override
 	public List<Settore> findAllByListIdLuogo(List<Long> idLuogo) {
 		return settoreRepository.findAllByIdLuogoIn(idLuogo);
 	}
-
-
 
 }
